@@ -1,8 +1,8 @@
 import { Headers, ofetch as fetcher } from "ofetch";
 
-const BASE_URL = "http://localhost:8000";
-const XSRF_HEADER_NAME = "X-XSRF-TOKEN";
-const XSRF_COOKIE_NAME = "XSRF-TOKEN";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const XSRF_HEADER_NAME = import.meta.env.VITE_XSRF_HEADER_NAME;
+const XSRF_COOKIE_NAME = import.meta.env.VITE_XSRF_COOKIE_NAME;
 
 function getCookie(name: string) {
   const cookie = document.cookie
