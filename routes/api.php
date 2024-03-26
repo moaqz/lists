@@ -16,7 +16,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     /**
      * Group Routes
      */
-    Route::get('/v1/groups', [GroupController::class, 'show'])
+    Route::get('/v1/groups', [GroupController::class, 'index'])
+        ->name('group.index');
+    Route::get('/v1/groups/{id}', [GroupController::class, 'show'])
         ->name('group.show');
     Route::post('/v1/groups', [GroupController::class, 'store'])
         ->name('group.store');

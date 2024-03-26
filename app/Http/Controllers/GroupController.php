@@ -9,6 +9,13 @@ use Illuminate\Http\Response;
 
 class GroupController extends Controller
 {
+    public function index(Request $request)
+    {
+        return Group::where('user_id', $request->user()->id)
+            ->latest()
+            ->get();
+    }
+
     public function store(StoreUpdateGroupRequest $request)
     {
         $validated = $request->safe()->only(['title', 'color']);
@@ -25,11 +32,12 @@ class GroupController extends Controller
         );
     }
 
-    public function show(Request $request)
+    public function show(Request $request, string $id)
     {
-        return Group::where('user_id', $request->user()->id)
-            ->latest()
-            ->get();
+        return Group::where([
+            'id' => $id,
+            'user_id' => $request->user()->id,
+        ])->firstOrFail();
     }
 
     public function update(StoreUpdateGroupRequest $request, string $id)
