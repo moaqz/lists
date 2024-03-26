@@ -18,10 +18,6 @@ class StoreTaskRequest extends FormRequest
         return [
             'content' => ['required', 'string', 'max:480'],
             'priority' => ['nullable', Rule::enum(Priority::class)],
-            'group_id' => [
-                'required', 'uuid',
-                Rule::exists('groups', 'id')->where('user_id', $this->user()->id),
-            ],
         ];
     }
 

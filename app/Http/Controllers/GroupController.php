@@ -13,7 +13,7 @@ class GroupController extends Controller
     {
         return Group::where('user_id', $request->user()->id)
             ->latest()
-            ->get();
+            ->simplePaginate(30);
     }
 
     public function store(StoreUpdateGroupRequest $request)

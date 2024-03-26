@@ -5,43 +5,51 @@ namespace App\Http\Controllers;
 use App\Enums\Priority;
 use App\Http\Requests\Tasks\StoreTaskRequest;
 use App\Http\Requests\Tasks\UpdateTaskRequest;
+use App\Models\Group;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, string $groupId)
     {
-        return Task::where(['user_id' => $request->user()->id])
-            ->orderBy('created_at', 'desc')
+        return Task::where([
+            'group_id' => $groupId,
+            'user_id' => $request->user()->id,
+        ])
+            ->latest()
             ->simplePaginate(30);
     }
 
-    public function store(StoreTaskRequest $request)
+    public function store(StoreTaskRequest $request, string $groupId)
     {
+        Group::where('id', $groupId)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
         $validated = $request->safe()->only([
             'content',
             'priority',
-            'group_id',
         ]);
 
         return Task::create([
             ...$validated,
             'priority' => $validated['priority'] ?? Priority::NONE->value,
             'user_id' => $request->user()->id,
+            'group_id' => $groupId,
         ]);
     }
 
-    public function show(Request $request, string $id)
+    public function show(Request $request, string $groupId, string $taskId)
     {
         return Task::where([
-            'id' => $id,
+            'id' => $taskId,
             'user_id' => $request->user()->id,
         ])->firstOrFail();
     }
 
-    public function update(UpdateTaskRequest $request, string $id)
+    public function update(UpdateTaskRequest $request, string $groupId, string $taskId)
     {
         $validated = $request->safe()->only([
             'content',
@@ -50,7 +58,7 @@ class TaskController extends Controller
         ]);
 
         $updated = Task::where([
-            'id' => $id,
+            'id' => $taskId,
             'user_id' => $request->user()->id,
         ])->firstOrFail()->update($validated);
 
@@ -67,10 +75,10 @@ class TaskController extends Controller
         );
     }
 
-    public function destroy(Request $request, string $id)
+    public function destroy(Request $request, string $groupId, string $taskId)
     {
         $deleted = Task::where([
-            'id' => $id,
+            'id' => $taskId,
             'user_id' => $request->user()->id,
         ])->firstOrFail()->delete();
 
