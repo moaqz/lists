@@ -21,7 +21,7 @@ class GroupTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->postJson(route('group.store'), $group);
+            ->postJson(route('groups.store'), $group);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
@@ -30,7 +30,7 @@ class GroupTest extends TestCase
     {
         $group = Group::factory()->make()->toArray();
 
-        $response = $this->postJson(route('group.store'), $group);
+        $response = $this->postJson(route('groups.store'), $group);
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
@@ -42,12 +42,12 @@ class GroupTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->postJson(route('group.store'), $group);
+            ->postJson(route('groups.store'), $group);
 
         $response->assertStatus(Response::HTTP_CREATED);
 
         $lastGroup = Group::latest()->first();
-        
+
         $this->assertDatabaseCount($this->table, 1);
         $this->assertEquals($group['color'], $lastGroup->color->value);
         $this->assertEquals($group['title'], $lastGroup->title);
@@ -61,8 +61,8 @@ class GroupTest extends TestCase
         $response = $this
             ->actingAs($user)
             ->delete(route(
-                'group.destroy',
-                ['id' => $group->id]
+                'groups.destroy',
+                ['group' => $group->id]
             ));
 
         $response->assertStatus(Response::HTTP_NO_CONTENT);
