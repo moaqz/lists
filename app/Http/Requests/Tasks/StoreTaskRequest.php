@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Tasks;
 
+use App\Enums\Priority;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,7 +17,7 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'content' => ['required', 'string', 'max:480'],
-            'priority' => ['nullable', 'integer', 'min:0', 'max:3'],
+            'priority' => ['nullable', Rule::enum(Priority::class)],
             'group_id' => [
                 'required', 'uuid',
                 Rule::exists('groups', 'id')->where('user_id', $this->user()->id),

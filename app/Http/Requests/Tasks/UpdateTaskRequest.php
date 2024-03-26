@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Tasks;
 
+use App\Enums\Priority;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateTaskRequest extends FormRequest
 {
@@ -15,7 +17,7 @@ class UpdateTaskRequest extends FormRequest
     {
         return [
             'content' => ['required', 'string', 'max:480'],
-            'priority' => ['required', 'integer', 'min:0', 'max:3'],
+            'priority' => ['required', Rule::enum(Priority::class)],
             'completed' => ['required', 'boolean'],
         ];
     }

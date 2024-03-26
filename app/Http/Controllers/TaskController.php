@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Priority;
 use App\Http\Requests\Tasks\StoreTaskRequest;
 use App\Http\Requests\Tasks\UpdateTaskRequest;
 use App\Models\Task;
@@ -27,6 +28,7 @@ class TaskController extends Controller
 
         return Task::create([
             ...$validated,
+            'priority' => $validated['priority'] ?? Priority::NONE->value,
             'user_id' => $request->user()->id,
         ]);
     }
