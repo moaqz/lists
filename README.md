@@ -36,19 +36,19 @@ composer install
 cp .env.example .env
 ```
 
--  Update the allowed origins in the `FRONTEND_URL` variable in the `.env` file.
+-  Update the variable `FRONTEND_URL` used by the `cors.php` config file.
 
 > [!IMPORTANT]
 > The origin must only include the schema, host and port. No trailling slashes.
 > e.g. http://localhost:3000
 
-- Configure the cookie domain in the `SESSION_DOMAIN` variable in the `.env` file.
+- Update the variable `SESSION_DOMAIN` used by the `session.php` config file.
 
 > [!IMPORTANT]
 > The cookie domain name should not include the scheme, port or a trailling slash.
 > e.g. localhost
 
-- Make sure that Sanctum domains are configured using the `SANCTUM_STATEFUL_DOMAINS` variable.
+- Update the variable `SANCTUM_STATEFUL_DOMAINS` used by the `sanctum.php` config file.
 
 > [!IMPORTANT]
 > Stateful domains should only include the hostname and the port.
