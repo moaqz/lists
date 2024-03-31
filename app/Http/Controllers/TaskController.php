@@ -33,20 +33,28 @@ class TaskController extends Controller
             'priority',
         ]);
 
-        return Task::create([
+
+        $task = Task::create([
             ...$validated,
             'priority' => $validated['priority'] ?? Priority::NONE->value,
             'user_id' => $request->user()->id,
             'group_id' => $groupId,
         ]);
+
+        return response()->json(
+            ['data' => $task],
+            Response::HTTP_CREATED,
+        );
     }
 
     public function show(Request $request, string $groupId, string $taskId)
     {
-        return Task::where([
+        $task =  Task::where([
             'id' => $taskId,
             'user_id' => $request->user()->id,
         ])->firstOrFail();
+
+        return response()->json(['data' => $task]);
     }
 
     public function update(UpdateTaskRequest $request, string $groupId, string $taskId)
@@ -77,17 +85,10 @@ class TaskController extends Controller
 
     public function destroy(Request $request, string $groupId, string $taskId)
     {
-        $deleted = Task::where([
+        Task::where([
             'id' => $taskId,
             'user_id' => $request->user()->id,
-        ])->firstOrFail()->delete();
-
-        if (!$deleted) {
-            return response()->json(
-                ['error' => 'Failed to delete task'],
-                Response::HTTP_INTERNAL_SERVER_ERROR,
-            );
-        }
+        ])->first()->delete();
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

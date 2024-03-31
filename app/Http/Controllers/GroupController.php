@@ -27,17 +27,19 @@ class GroupController extends Controller
         ]);
 
         return response()->json(
-            ['message' => 'Group created successfully', 'data' => $group],
-            Response::HTTP_CREATED
+            ['data' => $group],
+            Response::HTTP_CREATED,
         );
     }
 
     public function show(Request $request, string $id)
     {
-        return Group::where([
+        $group = Group::where([
             'id' => $id,
             'user_id' => $request->user()->id,
         ])->firstOrFail();
+
+        return response()->json(['data' => $group]);
     }
 
     public function update(StoreUpdateGroupRequest $request, string $id)
@@ -60,27 +62,15 @@ class GroupController extends Controller
             );
         }
 
-        return response()->json(
-            ['message' => 'Group Successfully updated', 'data' => $group],
-            Response::HTTP_OK,
-        );
+        return response()->json(['data' => $group]);
     }
 
     public function destroy(Request $request, string $id)
     {
-        $group = Group::where([
+        Group::where([
             'id' => $id,
             'user_id' => $request->user()->id,
-        ])->firstOrFail();
-
-        $deleted = $group->delete();
-
-        if (!$deleted) {
-            return response()->json(
-                ['error' => 'Failed to delete the group'],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
+        ])->first()->delete();
 
         return response(null, RESPONSE::HTTP_NO_CONTENT);
     }
