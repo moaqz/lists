@@ -20,11 +20,4 @@ class StoreTaskRequest extends FormRequest
             'priority' => ['nullable', Rule::enum(Priority::class)],
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'group_id.exists' => 'The group is not available.'
-        ];
-    }
 }
