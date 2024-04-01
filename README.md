@@ -60,7 +60,16 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-4. Run the server and you are ready to go 🚀
+4. Apply database migrations:
+
+```bash
+php artisan migrate
+
+# Optionally, seed the database with sample data
+php artisan db:seed
+```
+
+5. Run the server and you are ready to go 🚀
 
 ```bash
 php artisan serve
