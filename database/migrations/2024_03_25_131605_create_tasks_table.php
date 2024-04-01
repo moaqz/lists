@@ -13,13 +13,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tasks', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->primary();
             $table->text('content');
             $table->tinyInteger('priority')->unsigned()->default(Priority::NONE->value);
             $table->boolean('completed')->default(false);
-            $table->foreignUuid('group_id')->index();
-            $table->foreignId('user_id')->index();
             $table->timestamps();
+
+            $table->foreignUuid('group_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->index('user_id');
+            $table->index('group_id');
         });
     }
 
